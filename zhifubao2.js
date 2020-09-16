@@ -39,15 +39,9 @@ function openForestPage() {
 
 //拾取自己能量
 function collectEnergy() {
-    text("成就").waitFor()
+    text("公益林").waitFor()
     sleep(1000)
     if (null != textContains("收集能量").findOne(3000)) {
-        // var Energys = textContains("收集能量").find() //查找所有的可以搜集的能量
-        // for (var i = 0; i < Energys.length; i++) {
-        //     var energyBound = Energys[i].bounds()
-        //     log(energyBound.centerX() + ',' + energyBound.centerY());
-        //     click(energyBound.centerX(), energyBound.centerY());
-        // }
         collectOtherEnergyFromPoint();
     }
 }
@@ -60,10 +54,6 @@ function collectOtherEnergyFromPoint() {
         click(numx, numy);
         click(numx, numy - 50);
         click(numx, numy + 50);
-        log(numx + ',' + numy);
-        log(numx + ',' + (numy - 50));
-        log(numx + ',' + (numy + 50));
-        log('------');
     }
 }
 
@@ -71,15 +61,16 @@ function collectOtherEnergyFromPoint() {
 function collectOtherFriendEnergy() {
     // 点击逛一逛目标位置
     click(otherX, otherY);
-    sleep(2000);
+    sleep(1000);
     // 防止找不到"成就"勋章,造成无法收取
     var chengjiu = className("android.widget.Button").text("成就").findOne(2000);
     if (chengjiu == null) {
         log('不存在成就,页面后退');
         back();
-    } else {
     }
-    collectEnergy();
+    if (null != textContains("收集能量").findOne(3000)) {
+        collectOtherEnergyFromPoint();
+    }
 }
 
 //退出程序
@@ -97,8 +88,19 @@ var myInterval = setInterval(function () {
     collectOtherFriendEnergy();
     count--;
     log('剩余执行次数为:' + count);
+    if (count % 10 == 0) {
+        log('开始收取自己的能量,count:'+count);
+        // 如果存在'公益林',即代表已经在我的蚂蚁森林页面了,无需后退.
+        var gongyilin = className("android.widget.Button").text("公益林").findOne(2000);
+        if (gongyilin != null) {
+            collectEnergy();
+        } else {
+            back();
+            collectEnergy();
+        }
+    }
     if (count <= 0) {
         clearInterval(myInterval);
-        endCollectEnergy()
+        endCollectEnergy();
     }
 }, 3000);
