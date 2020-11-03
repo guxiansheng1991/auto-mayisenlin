@@ -13,10 +13,12 @@ function unlock() {
     }
     sleep(1000);
     swipe(500,2000,500,1000,201);//可以
+    desc(2).findOne().click();
+    desc(5).findOne().click();
+    desc(3).findOne().click();
     desc(6).findOne().click();
-    desc(9).findOne().click();
-    desc(6).findOne().click();
-    desc(9).findOne().click();
+    desc(1).findOne().click();
+    desc(3).findOne().click();
     sleep(2000);
 }
 
